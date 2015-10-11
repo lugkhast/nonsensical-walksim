@@ -45,8 +45,10 @@ SDL_Window *SDLApp::createWindow()
 
 void SDLApp::start()
 {
-    this->window = this->createWindow();
+    bool quit = false;
+    SDL_Event e;
 
+    this->window = this->createWindow();
     this->windowSurface = SDL_GetWindowSurface(this->window);
     SDL_FillRect(
         this->windowSurface,
@@ -54,11 +56,15 @@ void SDLApp::start()
         SDL_MapRGB(this->windowSurface->format, 0xFF, 0xFF, 0xFF)
     );
 
-    //Update the surface
-    SDL_UpdateWindowSurface( window );
+    while(!quit) {
+        while ( SDL_PollEvent( &e ) != 0 ) {
+            if (e.type == SDL_QUIT) {
+                quit = true;
+            }
+        }
 
-    //Wait two seconds
-    SDL_Delay( 2000 );
+        SDL_UpdateWindowSurface( window );
+    }
 }
 
 SDLApp::SDLApp()
