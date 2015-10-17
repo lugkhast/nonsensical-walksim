@@ -11,6 +11,7 @@ public:
     void put(Movable *);
     void tick();
     void takeout(Movable *);
+    std::list<Movable *> getMovables();
 
     void printMovableCount();
 

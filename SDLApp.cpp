@@ -43,36 +43,74 @@ SDL_Window *SDLApp::createWindow()
     return window;
 }
 
+void SDLApp::handleEvent(SDL_Event *event)
+{
+    if (event->type == SDL_QUIT) {
+        this->quit = true;
+    }
+}
+
+void SDLApp::render()
+{
+    SDL_Rect fillRect;
+    auto movables = this->mh.getMovables();
+    Movable *movable;
+
+    fillRect.w = 4;
+    fillRect.h = 4;
+
+    SDL_FillRect(
+        this->windowSurface,
+        NULL,
+        SDL_MapRGB(this->windowSurface->format, 0x00, 0x00, 0x00)
+    );
+
+    for (auto it = movables.begin(); it != movables.end(); ++it) {
+        movable = *it;
+        fillRect.x = movable->x;
+        fillRect.y = movable->y;
+
+        SDL_FillRect(
+            this->windowSurface,
+            &fillRect,
+            SDL_MapRGB(
+                this->windowSurface->format,
+                0xFF, 0xFF, 0xFF
+            )
+        );
+    }
+
+    SDL_UpdateWindowSurface( this->window );
+}
+
 void SDLApp::start()
 {
-    bool quit = false;
+    this->quit = false;
     SDL_Event e;
 
     this->window = this->createWindow();
     this->windowSurface = SDL_GetWindowSurface(this->window);
-    SDL_FillRect(
-        this->windowSurface,
-        NULL,
-        SDL_MapRGB(this->windowSurface->format, 0xFF, 0xFF, 0xFF)
-    );
 
-    while(!quit) {
+    while(!this->quit) {
         while ( SDL_PollEvent( &e ) != 0 ) {
-            if (e.type == SDL_QUIT) {
-                quit = true;
-            }
+            this->handleEvent(&e);
         }
 
-        SDL_UpdateWindowSurface( window );
+        this->render();
     }
 }
 
 SDLApp::SDLApp()
 {
     this->initSDL();
+
+    this->player = new Movable;
+    this->mh.put(this->player);
 }
 
 SDLApp::~SDLApp()
 {
     this->cleanupSDL();
+
+    delete this->player;
 }

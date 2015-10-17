@@ -25,6 +25,11 @@ void MovementHandler::tick()
     }
 }
 
+std::list<Movable *> MovementHandler::getMovables()
+{
+    return this->movables;
+}
+
 void MovementHandler::printMovableCount()
 {
     std::cout << "We have "
