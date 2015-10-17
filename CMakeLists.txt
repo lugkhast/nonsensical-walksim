@@ -8,6 +8,13 @@ set (GAME_VERSION_MINOR 0)
 # Set compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
+set(SOURCES
+    main.cpp
+    Movable.cpp
+    MovementHandler.cpp
+    SDLApp.cpp
+)
+
 # configure a header file to pass some of the CMake settings
 # to the source code
 configure_file (
@@ -20,7 +27,7 @@ configure_file (
 include_directories("${PROJECT_BINARY_DIR}")
 
 # add the executable
-add_executable(walksim main.cpp Movable.cpp MovementHandler.cpp SDLApp.cpp)
+add_executable(walksim ${SOURCES})
 
 include(FindPkgConfig)
 pkg_search_module(SDL2 REQUIRED sdl2)
