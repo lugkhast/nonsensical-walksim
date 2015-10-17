@@ -1,8 +1,6 @@
 
 #include "SDLEventHandler.h"
 
-#include <iostream>
-
 SDLEventHandler::SDLEventHandler(Movable *player, World *world)
 {
     this->player = player;

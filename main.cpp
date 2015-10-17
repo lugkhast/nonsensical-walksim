@@ -1,9 +1,6 @@
 #include <iostream>
 
 #include "GameConfig.h"
-
-#include "MovementHandler.h"
-#include "Movable.h"
 #include "SDLApp.h"
 
 int main(int argc, char **argv)
