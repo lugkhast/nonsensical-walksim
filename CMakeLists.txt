@@ -8,19 +8,15 @@ set (GAME_VERSION_MINOR 0)
 # Set compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
-set(SOURCES
-    main.cpp
-    Movable.cpp
-    MovementHandler.cpp
-    SDLApp.cpp
-    SDLEventHandler.cpp
-    World.cpp
-)
+# Taken from this tutorial, way more useful than the official one
+# http://derekmolloy.ie/hello-world-introductions-to-cmake/#Example_2_A_Project_with_Directories
+file(GLOB SOURCES "src/*.cpp")
+include_directories("${PROJECT_SOURCE_DIR}/include")
 
 # configure a header file to pass some of the CMake settings
 # to the source code
 configure_file (
-  "${PROJECT_SOURCE_DIR}/GameConfig.h.in"
+  "${PROJECT_SOURCE_DIR}/include/GameConfig.h.in"
   "${PROJECT_BINARY_DIR}/GameConfig.h"
 )
 
