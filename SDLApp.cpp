@@ -43,53 +43,6 @@ SDL_Window *SDLApp::createWindow()
     return window;
 }
 
-void SDLApp::handleEvent(SDL_Event *event)
-{
-    if (event->type == SDL_QUIT) {
-        this->quit = true;
-    } else if (event->type == SDL_KEYDOWN) {
-        switch (event->key.keysym.sym) {
-        case SDLK_UP:
-            this->player->direction = Movable::UP;
-            break;
-        case SDLK_DOWN:
-            this->player->direction = Movable::DOWN;
-            break;
-        case SDLK_LEFT:
-            this->player->direction = Movable::LEFT;
-            break;
-        case SDLK_RIGHT:
-            this->player->direction = Movable::RIGHT;
-            break;
-        }
-
-        this->player->moving = true;
-    } else if (event->type == SDL_KEYUP) {
-        switch (event->key.keysym.sym) {
-        case SDLK_UP:
-            if (this->player->direction == Movable::UP) {
-                this->player->moving = false;
-            }
-            break;
-        case SDLK_DOWN:
-            if (this->player->direction == Movable::DOWN) {
-                this->player->moving = false;
-            }
-            break;
-        case SDLK_LEFT:
-            if (this->player->direction == Movable::LEFT) {
-                this->player->moving = false;
-            }
-            break;
-        case SDLK_RIGHT:
-            if (this->player->direction == Movable::RIGHT) {
-                this->player->moving = false;
-            }
-            break;
-        }
-    }
-}
-
 void SDLApp::render()
 {
     SDL_Rect fillRect;
@@ -134,7 +87,7 @@ void SDLApp::start()
 
     while(!this->quit) {
         while ( SDL_PollEvent( &e ) != 0 ) {
-            this->handleEvent(&e);
+            this->quit = this->evtHandler->handleEvent(&e);
         }
 
         this->world.tick();
@@ -149,6 +102,8 @@ SDLApp::SDLApp()
 
     this->player = new Movable;
     this->world.putMovable(this->player);
+
+    this->evtHandler = new SDLEventHandler(this->player, &this->world);
 }
 
 SDLApp::~SDLApp()
@@ -156,4 +111,5 @@ SDLApp::~SDLApp()
     this->cleanupSDL();
 
     delete this->player;
+    delete this->evtHandler;
 }

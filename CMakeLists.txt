@@ -13,6 +13,7 @@ set(SOURCES
     Movable.cpp
     MovementHandler.cpp
     SDLApp.cpp
+    SDLEventHandler.cpp
     World.cpp
 )
 

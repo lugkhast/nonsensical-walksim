@@ -7,6 +7,7 @@
 #include "MovementHandler.h"
 #include "Movable.h"
 #include "World.h"
+#include "SDLEventHandler.h"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -28,6 +29,7 @@ private:
 
     World world;
     Movable *player;
+    SDLEventHandler *evtHandler;
 
     SDL_Surface *windowSurface = NULL;
     SDL_Window *window = NULL;
