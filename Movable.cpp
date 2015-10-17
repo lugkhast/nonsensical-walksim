@@ -19,10 +19,10 @@ void Movable::move()
 {
     switch (this->direction) {
     case UP:
-        this->y += this->pixelSpeed;
+        this->y -= this->pixelSpeed;
         break;
     case DOWN:
-        this->y -= this->pixelSpeed;
+        this->y += this->pixelSpeed;
         break;
     case LEFT:
         this->x -= this->pixelSpeed;

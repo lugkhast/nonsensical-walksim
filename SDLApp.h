@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 
 #include "MovementHandler.h"
+#include "Movable.h"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480

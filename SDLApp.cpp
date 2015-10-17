@@ -47,6 +47,46 @@ void SDLApp::handleEvent(SDL_Event *event)
 {
     if (event->type == SDL_QUIT) {
         this->quit = true;
+    } else if (event->type == SDL_KEYDOWN) {
+        switch (event->key.keysym.sym) {
+        case SDLK_UP:
+            this->player->direction = Movable::UP;
+            break;
+        case SDLK_DOWN:
+            this->player->direction = Movable::DOWN;
+            break;
+        case SDLK_LEFT:
+            this->player->direction = Movable::LEFT;
+            break;
+        case SDLK_RIGHT:
+            this->player->direction = Movable::RIGHT;
+            break;
+        }
+
+        this->player->moving = true;
+    } else if (event->type == SDL_KEYUP) {
+        switch (event->key.keysym.sym) {
+        case SDLK_UP:
+            if (this->player->direction == Movable::UP) {
+                this->player->moving = false;
+            }
+            break;
+        case SDLK_DOWN:
+            if (this->player->direction == Movable::DOWN) {
+                this->player->moving = false;
+            }
+            break;
+        case SDLK_LEFT:
+            if (this->player->direction == Movable::LEFT) {
+                this->player->moving = false;
+            }
+            break;
+        case SDLK_RIGHT:
+            if (this->player->direction == Movable::RIGHT) {
+                this->player->moving = false;
+            }
+            break;
+        }
     }
 }
 
@@ -56,8 +96,8 @@ void SDLApp::render()
     auto movables = this->mh.getMovables();
     Movable *movable;
 
-    fillRect.w = 4;
-    fillRect.h = 4;
+    fillRect.w = 16;
+    fillRect.h = 16;
 
     SDL_FillRect(
         this->windowSurface,
@@ -95,6 +135,8 @@ void SDLApp::start()
         while ( SDL_PollEvent( &e ) != 0 ) {
             this->handleEvent(&e);
         }
+
+        this->mh.tick();
 
         this->render();
     }

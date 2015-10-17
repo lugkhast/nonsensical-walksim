@@ -21,7 +21,10 @@ void MovementHandler::tick()
 
     for (it = movables->begin(); it != movables->end(); ++it) {
         movable = *it;
-        movable->move();
+
+        if (movable->isMoving()) {
+            movable->move();
+        }
     }
 }
 

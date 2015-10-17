@@ -17,7 +17,7 @@ public:
     };
 
     int x = 0, y = 0;
-    int pixelSpeed = 2;
+    int pixelSpeed = 1;
     bool moving = false;
     Direction direction = UP;
 
