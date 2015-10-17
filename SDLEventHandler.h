@@ -13,6 +13,9 @@ public:
     SDLEventHandler(Movable *player, World *world);
     bool handleEvent(SDL_Event *event);
 
+    void onKeyDown(SDL_Event *event);
+    void onKeyUp(SDL_Event *event);
+
 private:
     Movable *player;
     World *world;
