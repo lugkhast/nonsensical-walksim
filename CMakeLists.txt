@@ -13,6 +13,7 @@ set(SOURCES
     Movable.cpp
     MovementHandler.cpp
     SDLApp.cpp
+    World.cpp
 )
 
 # configure a header file to pass some of the CMake settings

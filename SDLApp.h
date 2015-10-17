@@ -6,6 +6,7 @@
 
 #include "MovementHandler.h"
 #include "Movable.h"
+#include "World.h"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -25,7 +26,7 @@ private:
     void cleanupSDL();
     SDL_Window *createWindow();
 
-    MovementHandler mh;
+    World world;
     Movable *player;
 
     SDL_Surface *windowSurface = NULL;
