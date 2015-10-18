@@ -1,4 +1,4 @@
-
+#include <iostream>
 #include "lugSDL/lsWindow.h"
 #include "lugSDL/lsException.h"
 
@@ -20,7 +20,9 @@ lsWindow::lsWindow(std::string title)
 
 lsWindow::~lsWindow()
 {
+    std::cout << "Calling SDL_DestroyWindow" << std::endl;
     SDL_DestroyWindow(mWindow);
+    std::cout << "Done with SDL_DestroyWindow" << std::endl;
 }
 
 SDL_Window *lsWindow::getSDLWindow()

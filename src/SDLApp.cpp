@@ -1,6 +1,4 @@
-
 #include <iostream>
-
 #include "SDLApp.h"
 
 
@@ -11,6 +9,17 @@ bool SDLApp::initSDL()
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "Failed to initialize SDL! SDL error: "
             << SDL_GetError() << std::endl;
+        success = false;
+    }
+
+    //Set texture filtering to linear
+    if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ) ) {
+        printf( "Warning: Linear texture filtering not enabled!" );
+    }
+
+    int imgFlags = IMG_INIT_PNG;
+    if( !( IMG_Init( imgFlags ) & imgFlags ) ) {
+        printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
         success = false;
     }
 
@@ -25,40 +34,6 @@ void SDLApp::cleanupSDL()
     SDL_Quit();
 }
 
-void SDLApp::render()
-{
-    SDL_Rect fillRect;
-    MovementHandler movementHandler = this->world->getMovementHandler();
-    auto movables = movementHandler.getMovables();
-    Movable *movable;
-
-    fillRect.w = 16;
-    fillRect.h = 16;
-
-    SDL_FillRect(
-        this->windowSurface,
-        NULL,
-        SDL_MapRGB(this->windowSurface->format, 0x00, 0x00, 0x00)
-    );
-
-    for (auto it = movables.begin(); it != movables.end(); ++it) {
-        movable = *it;
-        fillRect.x = movable->x;
-        fillRect.y = movable->y;
-
-        SDL_FillRect(
-            this->windowSurface,
-            &fillRect,
-            SDL_MapRGB(
-                this->windowSurface->format,
-                0xFF, 0xFF, 0xFF
-            )
-        );
-    }
-
-    this->window->updateSurface();
-}
-
 void SDLApp::handleWindowEvent(SDL_Event *event)
 {
     switch (event->window.event) {
@@ -71,13 +46,68 @@ void SDLApp::handleWindowEvent(SDL_Event *event)
     }
 }
 
+SDL_Texture *SDLApp::loadTexture(string path)
+{
+    //The final texture
+	SDL_Texture *newTexture = NULL;
+
+	//Load image at specified path
+	SDL_Surface *loadedSurface = IMG_Load(path.c_str());
+	if( loadedSurface == NULL ) {
+		printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
+	} else {
+		//Create texture from surface pixels
+        newTexture = SDL_CreateTextureFromSurface( mRenderer, loadedSurface );
+		if( newTexture == NULL ) {
+			printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
+		}
+
+		//Get rid of old loaded surface
+		SDL_FreeSurface( loadedSurface );
+	}
+
+	return newTexture;
+}
+
+void SDLApp::render()
+{
+    SDL_Rect destRect;
+    MovementHandler movementHandler = this->world->getMovementHandler();
+    auto movables = movementHandler.getMovables();
+    Movable *movable;
+
+    destRect.w = 64;
+    destRect.h = 64;
+
+    SDL_FillRect(
+        this->windowSurface,
+        NULL,
+        SDL_MapRGB(this->windowSurface->format, 0x00, 0x00, 0x00)
+    );
+
+    for (auto it = movables.begin(); it != movables.end(); ++it) {
+        movable = *it;
+        destRect.x = movable->x;
+        destRect.y = movable->y;
+
+        SDL_RenderClear( mRenderer );
+        SDL_RenderCopy( mRenderer, this->playerTexture, NULL, &destRect );
+        SDL_RenderPresent( mRenderer );
+    }
+}
+
 void SDLApp::start()
 {
     this->quit = false;
     SDL_Event e;
 
     this->window = new lsWindow("Walking Simulator 2016");
-    this->windowSurface = this->window->getSDLSurface();
+
+    mRenderer = SDL_CreateRenderer(
+        this->window->getSDLWindow(), -1, SDL_RENDERER_ACCELERATED
+    );
+    SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0x00, 0xFF);
+    this->playerTexture = loadTexture("assets/pic1.png");
 
     while(!this->quit) {
         while ( SDL_PollEvent( &e ) != 0 ) {
@@ -91,9 +121,15 @@ void SDLApp::start()
         }
 
         this->world->tick();
-
         this->render();
     }
+
+    std::cout << "Destroying renderer" << std::endl;
+    SDL_DestroyRenderer(mRenderer);
+    std::cout << "Deleting window" << std::endl;
+    delete this->window;
+    this->window = NULL;
+    std::cout << "End of start()" << std::endl;
 }
 
 SDLApp::SDLApp()
