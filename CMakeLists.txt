@@ -10,7 +10,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 # Taken from this tutorial, way more useful than the official one
 # http://derekmolloy.ie/hello-world-introductions-to-cmake/#Example_2_A_Project_with_Directories
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "src/*.cpp" "src/lugSDL/*.cpp")
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
 # configure a header file to pass some of the CMake settings

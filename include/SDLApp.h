@@ -6,8 +6,10 @@
 
 #include "MovementHandler.h"
 #include "Movable.h"
-#include "World.h"
 #include "SDLEventHandler.h"
+#include "World.h"
+
+#include "lugSDL/lsWindow.h"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -25,14 +27,13 @@ public:
 private:
     bool initSDL();
     void cleanupSDL();
-    SDL_Window *createWindow();
 
     World *world;
     Movable *player;
     SDLEventHandler *evtHandler;
 
     SDL_Surface *windowSurface = NULL;
-    SDL_Window *window = NULL;
+    lsWindow *window = NULL;
     bool quit;
 };
 

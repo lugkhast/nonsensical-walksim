@@ -19,28 +19,10 @@ bool SDLApp::initSDL()
 
 void SDLApp::cleanupSDL()
 {
-    SDL_DestroyWindow(this->window);
+    delete this->window;
     this->window = NULL;
 
     SDL_Quit();
-}
-
-SDL_Window *SDLApp::createWindow()
-{
-    window = SDL_CreateWindow(
-        "SDL Tutorial",
-        SDL_WINDOWPOS_UNDEFINED,
-        SDL_WINDOWPOS_UNDEFINED,
-        SCREEN_WIDTH, SCREEN_HEIGHT,
-        SDL_WINDOW_SHOWN
-    );
-
-    if (window == NULL) {
-        std::cerr << "Window could not be created! SDL error: "
-            << SDL_GetError() << std::endl;
-    }
-
-    return window;
 }
 
 void SDLApp::render()
@@ -74,7 +56,7 @@ void SDLApp::render()
         );
     }
 
-    SDL_UpdateWindowSurface( this->window );
+    this->window->updateSurface();
 }
 
 void SDLApp::start()
@@ -82,8 +64,8 @@ void SDLApp::start()
     this->quit = false;
     SDL_Event e;
 
-    this->window = this->createWindow();
-    this->windowSurface = SDL_GetWindowSurface(this->window);
+    this->window = new lsWindow("Walking Simulator 2016");
+    this->windowSurface = this->window->getSDLSurface();
 
     while(!this->quit) {
         while ( SDL_PollEvent( &e ) != 0 ) {
