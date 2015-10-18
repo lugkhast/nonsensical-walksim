@@ -27,7 +27,7 @@ private:
     void cleanupSDL();
     SDL_Window *createWindow();
 
-    World world;
+    World *world;
     Movable *player;
     SDLEventHandler *evtHandler;
 

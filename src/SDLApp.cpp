@@ -46,7 +46,7 @@ SDL_Window *SDLApp::createWindow()
 void SDLApp::render()
 {
     SDL_Rect fillRect;
-    MovementHandler movementHandler = this->world.getMovementHandler();
+    MovementHandler movementHandler = this->world->getMovementHandler();
     auto movables = movementHandler.getMovables();
     Movable *movable;
 
@@ -90,7 +90,7 @@ void SDLApp::start()
             this->quit = this->evtHandler->handleEvent(&e);
         }
 
-        this->world.tick();
+        this->world->tick();
 
         this->render();
     }
@@ -101,9 +101,10 @@ SDLApp::SDLApp()
     this->initSDL();
 
     this->player = new Movable;
-    this->world.putMovable(this->player);
+    this->world = new World;
+    this->world->putMovable(this->player);
 
-    this->evtHandler = new SDLEventHandler(this->player, &this->world);
+    this->evtHandler = new SDLEventHandler(this->player, this->world);
 }
 
 SDLApp::~SDLApp()
@@ -111,5 +112,6 @@ SDLApp::~SDLApp()
     this->cleanupSDL();
 
     delete this->player;
+    delete this->world;
     delete this->evtHandler;
 }
