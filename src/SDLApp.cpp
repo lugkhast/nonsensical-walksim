@@ -111,7 +111,7 @@ SDLApp::~SDLApp()
 {
     this->cleanupSDL();
 
-    delete this->player;
-    delete this->world;
     delete this->evtHandler;
+    delete this->world;
+    delete this->player;
 }
