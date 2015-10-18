@@ -59,6 +59,18 @@ void SDLApp::render()
     this->window->updateSurface();
 }
 
+void SDLApp::handleWindowEvent(SDL_Event *event)
+{
+    switch (event->window.event) {
+    case SDL_WINDOWEVENT_SIZE_CHANGED:
+        this->windowSurface = this->window->getSDLSurface();
+        break;
+    case SDL_WINDOWEVENT_EXPOSED:
+        this->windowSurface = this->window->getSDLSurface();
+        break;
+    }
+}
+
 void SDLApp::start()
 {
     this->quit = false;
@@ -69,7 +81,13 @@ void SDLApp::start()
 
     while(!this->quit) {
         while ( SDL_PollEvent( &e ) != 0 ) {
-            this->quit = this->evtHandler->handleEvent(&e);
+            // Window events should be handled here
+            if (e.type == SDL_WINDOWEVENT) {
+                this->handleWindowEvent(&e);
+            } else {
+                // Game-relevant events are handled by SDLEventHandler
+                this->quit = this->evtHandler->handleEvent(&e);
+            }
         }
 
         this->world->tick();

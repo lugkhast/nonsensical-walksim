@@ -20,13 +20,12 @@ public:
     SDLApp();
     ~SDLApp();
     void start();
-
-    void handleEvent(SDL_Event *event);
     void render();
 
 private:
     bool initSDL();
     void cleanupSDL();
+    void handleWindowEvent(SDL_Event *event);
 
     World *world;
     Movable *player;
